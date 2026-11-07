@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#131a2c">
+<meta property="og:title" content="LLM: Large Language Mogul">
+<meta property="og:description" content="From Seed to Singularity. A PC tycoon game about growing an AI company from a 2017 Silicon Valley garage.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cpolygon points='17,2 31,10 17,18 3,10' fill='%23ffb547'/%3E%3Cpolygon points='3,10 17,18 17,32 3,24' fill='%23c98320'/%3E%3Cpolygon points='31,10 17,18 17,32 31,24' fill='%235ad6c8'/%3E%3C/svg%3E">
+<title>LLM: Large Language Mogul</title>
+<meta name="description" content="LLM: Large Language Mogul. A PC tycoon game about growing an AI company from a 2017 Silicon Valley garage. From Seed to Singularity.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dusk-lit scroll. Faceted low-poly hero over the garage, then a HUD strip,
+   the pitch, the three garage stages, screenshot slots, and the wishlist/sign-up close.
+   Single deliberate night look (the garage at 2 a.m.), so no light theme. */
+:root {
+  --night: #131a2c;      /* page ground: Palo Alto after dark */
+  --deck: #1b2440;       /* raised panels */
+  --deck-2: #232e52;
+  --line: #34406a;
+  --ink: #edf0f7;
+  --muted: #a3acc7;
+  --amber: #ffb547;      /* the work light hanging in the garage */
+  --amber-ink: #2a1a00;
+  --teal: #5ad6c8;       /* monitor glow */
+  --display: "Chakra Petch", "Bahnschrift", "Arial Narrow", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--night); color: var(--ink); font: 400 17px/1.6 var(--body); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
+a { color: var(--teal); }
+:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.1; margin: 0; }
+p { margin: 0; }
+.eyebrow { font: 500 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--amber); }
+
+/* Header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--night) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand svg { flex: none; }
+.brand b { font: 700 20px/1 var(--display); letter-spacing: .04em; }
+.brand span { font: 500 13px/1 var(--display); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+nav.links { display: flex; gap: 22px; font: 500 14px/1 var(--body); }
+nav.links a { color: var(--muted); text-decoration: none; }
+nav.links a:hover { color: var(--ink); }
+@media (max-width: 760px) { nav.links { display: none; } .brand span { display: none; } }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--display); letter-spacing: .05em; text-transform: uppercase; text-decoration: none; padding: 14px 20px; border: 0; cursor: pointer;
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px)); transition: transform .15s ease, filter .15s ease; }
+.btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.btn-amber { background: var(--amber); color: var(--amber-ink); }
+.btn-ghost { background: var(--deck-2); color: var(--ink); }
+.btn small { font: 500 11px/1 var(--mono); letter-spacing: .04em; text-transform: none; opacity: .75; }
+@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover { transform: none; } }
+
+/* Hero */
+.hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line); }
+.hero canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 32px; align-items: center; padding-block: 72px 64px; }
+.hero-copy { display: grid; gap: 22px; min-width: 0; }
+.logo-lockup { display: grid; gap: 6px; }
+.logo-lockup .big { font: 700 clamp(64px, 12vw, 132px)/.86 var(--display); letter-spacing: .02em; color: var(--ink); text-shadow: 0 6px 0 rgba(0,0,0,.25); }
+.logo-lockup .big em { font-style: normal; color: var(--amber); }
+.logo-lockup .sub { font: 600 clamp(20px, 3vw, 30px)/1.1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--ink); }
+.tagline { font: 500 clamp(18px, 2.2vw, 22px)/1.4 var(--display); color: var(--teal); letter-spacing: .03em; }
+.hero-copy p.lede { color: var(--muted); max-width: 52ch; font-size: 18px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero-art { aspect-ratio: 5 / 4; max-width: 100%; min-width: 0; position: relative; }
+.hero-art canvas { position: absolute; inset: 0; }
+.hero-art .caption { position: absolute; left: 8px; bottom: 8px; font: 400 11px/1.3 var(--mono); color: var(--muted); background: color-mix(in srgb, var(--night) 70%, transparent); padding: 4px 8px; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: 1fr; padding-block: 48px 40px; } }
+
+/* HUD strip: the six resources */
+.hud { background: var(--deck); border-bottom: 1px solid var(--line); }
+.hud .wrap { padding-block: 18px; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.res { display: grid; gap: 4px; padding: 10px 12px; background: var(--night); border: 1px solid var(--line); min-width: 0; }
+.res .k { font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.res .v { font: 600 20px/1.1 var(--display); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.res .d { font: 400 11px/1.2 var(--mono); }
+.up { color: var(--teal); } .down { color: #ff8f7a; }
+.hud-note { grid-column: 1 / -1; font: 400 12px/1.4 var(--mono); color: var(--muted); }
+@media (max-width: 900px) { .hud .wrap { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 460px) { .hud .wrap { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+section { padding-block: 88px; }
+section + section { border-top: 1px solid var(--line); }
+.sec-head { display: grid; gap: 14px; max-width: 680px; margin-bottom: 44px; }
+.sec-head h2 { font-size: clamp(32px, 4.6vw, 48px); }
+.sec-head p { color: var(--muted); font-size: 18px; }
+
+/* Pitch / features */
+.features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.feat { background: var(--night); padding: 28px 24px 30px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.feat svg { width: 40px; height: 40px; }
+.feat h3 { font-size: 22px; letter-spacing: .02em; }
+.feat p { color: var(--muted); font-size: 16px; }
+@media (max-width: 900px) { .features { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 560px) { .features { grid-template-columns: 1fr; } }
+
+/* Garage stages: a real sequence */
+.stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; counter-reset: stage; }
+.stage { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.stage .art { aspect-ratio: 4 / 3; max-width: 100%; background: var(--deck); border: 1px solid var(--line); position: relative; }
+.stage .art canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.stage .num { font: 500 12px/1 var(--mono); color: var(--amber); letter-spacing: .12em; text-transform: uppercase; }
+.stage h3 { font-size: 24px; }
+.stage p { color: var(--muted); font-size: 16px; }
+@media (max-width: 860px) { .stages { grid-template-columns: 1fr; max-width: 520px; } }
+
+/* Screenshots */
+.shots { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: auto auto; gap: 16px; }
+.shot { position: relative; aspect-ratio: 16 / 9; max-width: 100%; background:
+  repeating-linear-gradient(135deg, var(--deck) 0 14px, var(--deck-2) 14px 15px); border: 1px dashed var(--line); display: grid; place-items: center; min-width: 0; }
+.shot.wide { grid-row: span 2; aspect-ratio: auto; min-height: 280px; }
+.shot span { font: 500 12px/1.4 var(--mono); color: var(--muted); text-align: center; padding: 8px 12px; background: var(--night); border: 1px solid var(--line); max-width: 90%; }
+@media (max-width: 760px) { .shots { grid-template-columns: 1fr; } .shot.wide { grid-row: auto; aspect-ratio: 16 / 9; min-height: 0; } }
+
+/* Close: wishlist + sign-up */
+.close { background: var(--deck); }
+.close .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 48px; align-items: start; }
+.close h2 { font-size: clamp(32px, 4.6vw, 48px); }
+.close .col { display: grid; gap: 18px; min-width: 0; }
+.close p { color: var(--muted); }
+form.signup { display: grid; gap: 10px; }
+form.signup label { font: 500 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.field-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.field-row input { flex: 1 1 220px; min-width: 0; font: 400 16px/1 var(--body); color: var(--ink); background: var(--night); border: 1px solid var(--line); padding: 14px 14px; }
+.field-row input:focus-visible { outline: 2px solid var(--teal); outline-offset: 0; }
+.form-msg { font: 400 13px/1.5 var(--mono); color: var(--teal); min-height: 1.5em; }
+.form-msg.err { color: #ff8f7a; }
+.facts { display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 15px; margin: 0; }
+.facts dt { font: 500 12px/1.9 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.facts dd { margin: 0; }
+@media (max-width: 860px) { .close .wrap { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 28px 36px; display: flex; flex-wrap: wrap; gap: 12px 28px; justify-content: space-between; font: 400 13px/1.5 var(--mono); color: var(--muted); }
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="LLM: Large Language Mogul, back to top">
+      <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true">
+        <polygon points="17,2 31,10 17,18 3,10" fill="#ffb547"/>
+        <polygon points="3,10 17,18 17,32 3,24" fill="#c98320"/>
+        <polygon points="31,10 17,18 17,32 31,24" fill="#5ad6c8"/>
+      </svg>
+      <b>LLM</b><span>Large Language Mogul</span>
+    </a>
+    <nav class="links" aria-label="Sections">
+      <a href="#play">How it plays</a>
+      <a href="#garage">The garage</a>
+      <a href="#media">Screenshots</a>
+      <a href="#wishlist">Wishlist</a>
+    </nav>
+    <a class="btn btn-amber" href="#wishlist">Wishlist</a>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <canvas id="facets" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="hero-copy">
+        <div class="logo-lockup">
+          <h1 class="big" aria-label="LLM">LL<em>M</em></h1>
+          <div class="sub">Large Language Mogul</div>
+        </div>
+        <p class="tagline">From Seed to Singularity.</p>
+        <p class="lede">Palo Alto, 2017. You have a two-car garage, one borrowed GPU and a founder who won't stop talking about transformers. Hire the team, train the models, keep the lights on, and grow a garage project into the company that builds what comes next.</p>
+        <div class="cta-row">
+          <a class="btn btn-amber" href="#wishlist">Wishlist on Steam <small>coming soon</small></a>
+          <a class="btn btn-ghost" href="#signup">Get dev updates</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <canvas id="garage" role="img" aria-label="Low-poly illustration of a lit two-car garage at night with a desk, monitors and a server rack"></canvas>
+        <div class="caption">Concept render placeholder. Final art coming.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hud" aria-label="The six resources you manage">
+    <div class="wrap">
+      <div class="res"><span class="k">Cash</span><span class="v">$41,200</span><span class="d down">−$6.8k / mo</span></div>
+      <div class="res"><span class="k">Compute</span><span class="v">11 TFLOPS</span><span class="d up">1× GTX 1080 Ti</span></div>
+      <div class="res"><span class="k">Talent</span><span class="v">3 / 4</span><span class="d">seats filled</span></div>
+      <div class="res"><span class="k">Data</span><span class="v">2.1 GB</span><span class="d up">+180 MB / day</span></div>
+      <div class="res"><span class="k">Reputation</span><span class="v">12</span><span class="d">"who?"</span></div>
+      <div class="res"><span class="k">Power</span><span class="v">38 kWh</span><span class="d down">breaker at 30 A</span></div>
+      <p class="hud-note">Day 1 of your runway. Six resources, one breaker box. Example values shown.</p>
+    </div>
+  </div>
+
+  <section id="play">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">How it plays</span>
+        <h2>A tycoon game about the most expensive science project on Earth</h2>
+        <p>Real-time management you can pause whenever a training run spikes, a client calls or the power trips.</p>
+      </div>
+      <div class="features">
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 34,12 20,20 6,12" fill="#ffb547"/><polygon points="6,12 20,20 20,36 6,28" fill="#c98320"/><polygon points="34,12 20,20 20,36 34,28" fill="#8a5a14"/></svg>
+          <h3>Pick your first model</h3>
+          <p>Bet the company on a chat assistant, a vision model or a recommendation engine. Each path has its own clients, data needs and research tree.</p>
+        </article>
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><polyline points="4,8 12,20 18,16 24,30 30,22 36,34" fill="none" stroke="#5ad6c8" stroke-width="3" stroke-linejoin="bevel"/><polygon points="22,28 26,28 24,32" fill="#ffb547"/></svg>
+          <h3>Babysit training runs</h3>
+          <p>Watch the loss curve, catch spikes, call early stopping, and survive the launch review before you ship.</p>
+        </article>
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="12,6 20,10 20,20 12,16" fill="#5ad6c8"/><polygon points="20,10 28,6 28,16 20,20" fill="#3a9a90"/><polygon points="6,22 14,26 14,36 6,32" fill="#ffb547"/><polygon points="26,22 34,26 34,36 26,32" fill="#ffb547"/></svg>
+          <h3>Hire a founding team</h3>
+          <p>Founders, ML, hardware and software engineers level up, fill skill slots and burn out if you push too hard.</p>
+        </article>
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="20,4 36,20 20,36 4,20" fill="none" stroke="#ffb547" stroke-width="3"/><circle cx="20" cy="20" r="4" fill="#5ad6c8"/></svg>
+          <h3>Balance six resources</h3>
+          <p>Cash, compute, talent, data, reputation and electricity all pull against each other. More GPUs means a bigger power bill.</p>
+        </article>
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="6" y="22" width="8" height="14" fill="#c98320"/><rect x="16" y="14" width="8" height="22" fill="#ffb547"/><rect x="26" y="6" width="8" height="30" fill="#5ad6c8"/></svg>
+          <h3>Raise, borrow, survive</h3>
+          <p>Land client contracts, license your models, take loans and pitch investors before the runway hits zero.</p>
+        </article>
+        <article class="feat">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><polygon points="4,36 4,18 20,6 36,18 36,36" fill="none" stroke="#5ad6c8" stroke-width="3" stroke-linejoin="bevel"/><rect x="12" y="24" width="16" height="12" fill="#ffb547"/></svg>
+          <h3>Outgrow the garage</h3>
+          <p>Upgrade computers, furniture, building and decor on their own tracks, then race a rival lab to the next breakthrough.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="garage">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Tier 1 · The garage</span>
+        <h2>Every empire starts next to a lawnmower</h2>
+        <p>Your first chapter plays out in three stages. Prove the MVP and the garage won't be big enough.</p>
+      </div>
+      <div class="stages">
+        <article class="stage">
+          <div class="art"><canvas data-stage="1" aria-hidden="true"></canvas></div>
+          <span class="num">Stage 1</span>
+          <h3>First Experiments</h3>
+          <p>A folding table, a used workstation and a whiteboard full of ideas. Train something, anything, that works.</p>
+        </article>
+        <article class="stage">
+          <div class="art"><canvas data-stage="2" aria-hidden="true"></canvas></div>
+          <span class="num">Stage 2</span>
+          <h3>Early Traction</h3>
+          <p>Real desks, a second hire and a rack that hums all night. Your first paying client wants a demo on Friday.</p>
+        </article>
+        <article class="stage">
+          <div class="art"><canvas data-stage="3" aria-hidden="true"></canvas></div>
+          <span class="num">Stage 3</span>
+          <h3>Ready to Move</h3>
+          <p>Cables everywhere, the breaker keeps tripping and investors are calling. Time to find an office.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="media">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Screenshots</span>
+        <h2>In development</h2>
+        <p>Gameplay captures land here as the low-poly art goes into the build.</p>
+      </div>
+      <div class="shots">
+        <div class="shot wide"><span>Screenshot slot · Garage overview from the management camera</span></div>
+        <div class="shot"><span>Screenshot slot · Training run and loss curve</span></div>
+        <div class="shot"><span>Screenshot slot · Hiring your team</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="wishlist" class="close">
+    <div class="wrap">
+      <div class="col">
+        <span class="eyebrow">Coming to PC</span>
+        <h2>Wishlist it and we'll ping you at launch</h2>
+        <p>Wishlists tell Steam to show the game to more players. It is the single most helpful thing you can do for a small studio.</p>
+        <div class="cta-row">
+          <a class="btn btn-amber" href="#wishlist" aria-disabled="true">Wishlist on Steam <small>store page coming soon</small></a>
+        </div>
+        <dl class="facts">
+          <dt>Genre</dt><dd>Business tycoon / management sim</dd>
+          <dt>Platform</dt><dd>PC (Windows)</dd>
+          <dt>Pace</dt><dd>Real-time with pause</dd>
+          <dt>Setting</dt><dd>Silicon Valley, 2017 onward</dd>
+          <dt>Status</dt><dd>In development</dd>
+        </dl>
+      </div>
+      <div class="col" id="signup">
+        <span class="eyebrow">Dev updates</span>
+        <h2>Get the build log</h2>
+        <p>Occasional emails with new art, playtest invites and the launch date. No spam.</p>
+        <form class="signup" id="signup-form" novalidate>
+          <label for="email">Email address</label>
+          <div class="field-row">
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+            <button class="btn btn-ghost" type="submit">Sign me up</button>
+          </div>
+          <p class="form-msg" id="form-msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 LLM: Large Language Mogul. All rights reserved.</span>
+    <span>Press kit coming soon</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Seeded random so the facets and scenes are the same on every load.
+  function rng(seed) { return function () { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; }; }
+  function mix(a, b, t) { return a.map(function (v, i) { return Math.round(v + (b[i] - v) * t); }); }
+  function rgb(c, k) { k = k == null ? 1 : k; return "rgb(" + Math.min(255, c[0] * k | 0) + "," + Math.min(255, c[1] * k | 0) + "," + Math.min(255, c[2] * k | 0) + ")"; }
+  function poly(ctx, pts, fill) { ctx.beginPath(); ctx.moveTo(pts[0][0], pts[0][1]); for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]); ctx.closePath(); ctx.fillStyle = fill; ctx.fill(); }
+  function fit(canvas) {
+    var r = canvas.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.max(1, Math.round(r.width * d)); canvas.height = Math.max(1, Math.round(r.height * d));
+    var ctx = canvas.getContext("2d"); ctx.setTransform(d, 0, 0, d, 0, 0); return { ctx: ctx, w: r.width, h: r.height };
+  }
+
+  // Faceted dusk sky behind the hero: jittered triangle grid, lit from the garage (bottom right).
+  function facets() {
+    var c = document.getElementById("facets"); if (!c) return;
+    var f = fit(c), ctx = f.ctx, w = f.w, h = f.h, R = rng(7), cell = 70;
+    var cols = Math.ceil(w / cell) + 2, rows = Math.ceil(h / cell) + 2, P = [];
+    for (var y = 0; y < rows; y++) { P[y] = []; for (var x = 0; x < cols; x++) {
+      var edge = x === 0 || y === 0 || x === cols - 1 || y === rows - 1;
+      P[y][x] = [(x - .5) * cell + (edge ? 0 : (R() - .5) * cell * .7), (y - .5) * cell + (edge ? 0 : (R() - .5) * cell * .7)];
+    } }
+    var top = [19, 26, 44], low = [36, 44, 82], warm = [92, 62, 40];
+    function shade(pts) {
+      var cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
+      var t = Math.min(1, cy / h), base = mix(top, low, t * .8);
+      var dx = (cx - w * .78) / w, dy = (cy - h * .7) / h, glow = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) * 2.2);
+      return rgb(mix(base, warm, glow * .55), .9 + R() * .2);
+    }
+    for (var y2 = 0; y2 < rows - 1; y2++) for (var x2 = 0; x2 < cols - 1; x2++) {
+      var a = P[y2][x2], b = P[y2][x2 + 1], cc = P[y2 + 1][x2], d = P[y2 + 1][x2 + 1];
+      var t1 = (x2 + y2) % 2 ? [a, b, d] : [a, b, cc], t2 = (x2 + y2) % 2 ? [a, d, cc] : [b, d, cc];
+      poly(ctx, t1, shade(t1)); poly(ctx, t2, shade(t2));
+    }
+    var g = ctx.createLinearGradient(0, 0, w * .6, 0);
+    g.addColorStop(0, "rgba(19,26,44,.82)"); g.addColorStop(1, "rgba(19,26,44,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+
+  // Isometric garage, built from flat-shaded polygons. stage: 0 = hero, 1-3 = tier stages.
+  function garage(canvas, stage) {
+    var f = fit(canvas), ctx = f.ctx, w = f.w, h = f.h;
+    var s = Math.min(w / 10, h / 8), ox = w / 2, oy = h * .3;
+    function iso(x, y, z) { return [ox + (x - y) * s * .866, oy + (x + y) * s * .5 - z * s]; }
+    function box(x, y, z, dx, dy, dz, col) {
+      poly(ctx, [iso(x, y, z + dz), iso(x + dx, y, z + dz), iso(x + dx, y + dy, z + dz), iso(x, y + dy, z + dz)], rgb(col, 1.15));
+      poly(ctx, [iso(x, y + dy, z), iso(x + dx, y + dy, z), iso(x + dx, y + dy, z + dz), iso(x, y + dy, z + dz)], rgb(col, .8));
+      poly(ctx, [iso(x + dx, y, z), iso(x + dx, y + dy, z), iso(x + dx, y + dy, z + dz), iso(x + dx, y, z + dz)], rgb(col, .62));
+    }
+    var floor = [70, 74, 92], wall = [58, 66, 102], wall2 = [44, 52, 86], wood = [176, 128, 76], metal = [120, 130, 158], amber = [255, 181, 71], teal = [90, 214, 200], dark = [30, 36, 58];
+    var W = 6, D = 6, H = 3.2;
+    if (stage) { ctx.fillStyle = "#1b2440"; ctx.fillRect(0, 0, w, h); }
+    // floor slab + light pool
+    poly(ctx, [iso(0, 0, 0), iso(W, 0, 0), iso(W, D, 0), iso(0, D, 0)], rgb(floor));
+    poly(ctx, [iso(W, 0, 0), iso(W, D, 0), iso(W, D, -.3), iso(W, 0, -.3)], rgb(floor, .55));
+    poly(ctx, [iso(0, D, 0), iso(W, D, 0), iso(W, D, -.3), iso(0, D, -.3)], rgb(floor, .75));
+    var glow = ctx.createRadialGradient.apply(ctx, iso(3, 3, 0).concat([0]).concat(iso(3, 3, 0)).concat([s * 3.4]));
+    glow.addColorStop(0, "rgba(255,181,71,.35)"); glow.addColorStop(1, "rgba(255,181,71,0)");
+    ctx.fillStyle = glow; poly(ctx, [iso(0, 0, 0), iso(W, 0, 0), iso(W, D, 0), iso(0, D, 0)], glow);
+    // back walls
+    poly(ctx, [iso(0, 0, 0), iso(W, 0, 0), iso(W, 0, H), iso(0, 0, H)], rgb(wall));
+    poly(ctx, [iso(0, 0, 0), iso(0, D, 0), iso(0, D, H), iso(0, 0, H)], rgb(wall2));
+    // rolled-up door outline on left wall
+    poly(ctx, [iso(0, 1, 0), iso(0, 5, 0), iso(0, 5, 2.4), iso(0, 1, 2.4)], rgb(dark));
+    poly(ctx, [iso(0, 1, 2.4), iso(0, 5, 2.4), iso(0, 5, 2.7), iso(0, 1, 2.7)], rgb(metal, .8));
+    // hanging work light
+    poly(ctx, [iso(3, 2.6, H - .2), iso(3.4, 2.6, H - .2), iso(3.4, 3, H - .5), iso(3, 3, H - .5)], rgb(amber, 1.1));
+    // whiteboard
+    poly(ctx, [iso(.6, 0, 1.1), iso(2.4, 0, 1.1), iso(2.4, 0, 2.3), iso(.6, 0, 2.3)], "rgb(226,230,240)");
+    ctx.strokeStyle = "rgba(60,90,160,.8)"; ctx.lineWidth = 1.2; ctx.beginPath();
+    var p1 = iso(.8, 0, 1.4), p2 = iso(1.3, 0, 2.0), p3 = iso(1.8, 0, 1.6), p4 = iso(2.2, 0, 2.1);
+    ctx.moveTo(p1[0], p1[1]); ctx.lineTo(p2[0], p2[1]); ctx.lineTo(p3[0], p3[1]); ctx.lineTo(p4[0], p4[1]); ctx.stroke();
+    var lvl = stage || 3;
+    // desks with monitors (count grows by stage)
+    var desks = lvl === 1 ? [[2.4, 1.6]] : lvl === 2 ? [[1.6, 1.4], [3.6, 1.4]] : [[1.2, 1.3], [3.2, 1.3], [1.2, 3.4]];
+    desks.forEach(function (d, i) {
+      box(d[0], d[1], .9, 1.6, .8, .12, lvl === 1 ? metal : wood);
+      box(d[0] + .1, d[1] + .1, 0, .12, .6, .9, dark); box(d[0] + 1.38, d[1] + .1, 0, .12, .6, .9, dark);
+      box(d[0] + .4, d[1] + .15, 1.02, .8, .08, .55, dark);
+      poly(ctx, [iso(d[0] + .45, d[1] + .23, 1.08), iso(d[0] + 1.15, d[1] + .23, 1.08), iso(d[0] + 1.15, d[1] + .23, 1.52), iso(d[0] + .45, d[1] + .23, 1.52)], rgb(i % 2 ? amber : teal, .95));
+      box(d[0] + .5, d[1] + 1.05, 0, .6, .6, .45, [80, 92, 140]);
+      box(d[0] + .5, d[1] + 1.55, .45, .6, .1, .6, [80, 92, 140]);
+    });
+    // server rack(s)
+    var racks = lvl === 1 ? 0 : lvl === 2 ? 1 : 2;
+    for (var r = 0; r < racks; r++) {
+      var rx = 5.0, ry = .4 + r * 1.0; box(rx, ry, 0, .8, .8, 2.0, [40, 46, 72]);
+      for (var k = 0; k < 6; k++) { var z = .25 + k * .28; poly(ctx, [iso(rx + .8, ry + .15, z), iso(rx + .8, ry + .65, z), iso(rx + .8, ry + .65, z + .08), iso(rx + .8, ry + .15, z + .08)], k % 3 === 0 ? rgb(amber) : rgb(teal, .9)); }
+    }
+    // stage 1: a lone workstation tower on the floor; stage 3: boxes stacked to move
+    if (lvl === 1) box(4.4, 2.0, 0, .45, .9, 1.0, [52, 58, 90]);
+    if (lvl === 3) { box(4.2, 4.4, 0, .9, .9, .7, wood); box(4.3, 4.5, .7, .7, .7, .5, [196, 150, 96]); box(3.0, 4.8, 0, .8, .8, .6, wood); }
+    // cables on stage 3
+    if (lvl === 3) { ctx.strokeStyle = "rgba(255,181,71,.6)"; ctx.lineWidth = 1.5; ctx.beginPath(); var c1 = iso(5, 2.2, 0), c2 = iso(3.4, 2.6, 0), c3 = iso(2.2, 3.6, 0); ctx.moveTo(c1[0], c1[1]); ctx.lineTo(c2[0], c2[1]); ctx.lineTo(c3[0], c3[1]); ctx.stroke(); }
+  }
+
+  function drawAll() {
+    facets();
+    var g = document.getElementById("garage"); if (g) garage(g, 0);
+    document.querySelectorAll("canvas[data-stage]").forEach(function (c) { garage(c, +c.getAttribute("data-stage")); });
+  }
+  var t; window.addEventListener("resize", function () { clearTimeout(t); t = setTimeout(drawAll, 120); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawAll); drawAll();
+
+  // Sign-up: preview only. Nothing is sent or stored until a mailing list is connected.
+  var form = document.getElementById("signup-form"), msg = document.getElementById("form-msg"), input = document.getElementById("email");
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var v = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { msg.className = "form-msg err"; msg.textContent = "Enter an email like name@example.com."; input.focus(); return; }
+    msg.className = "form-msg"; msg.textContent = "Preview only: sign-ups aren't connected to a mailing list yet, so this address wasn't saved.";
+  });
+})();
+</script>
+</body>
+</html>
